@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Tables brutes chargées depuis les CSV dans PostgreSQL."
+    schema: raw
+    tables:
+      - name: employees
+        description: "Référentiel brut des employés."
+      - name: products
+        description: "Catalogue brut des produits."
+      - name: promotions
+        description: "Promotions brutes par produit."
+      - name: sales
+        description: "Entêtes de tickets de caisse."
+      - name: sales_lines
+        description: "Lignes détaillées des tickets de caisse."
+      - name: shifts
+        description: "Planning brut des shifts employés."

@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: dim_employees
+    description: "Dimension employés pour les analyses RH et performance."
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_products
+    description: "Dimension produits pour les analyses de catalogue."
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_promotions
+    description: "Dimension promotions pour l'analyse des remises."
+    columns:
+      - name: promotion_id
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+
+  - name: dim_shifts
+    description: "Dimension shifts pour croiser performance et planning."
+    columns:
+      - name: shift_id
+        tests:
+          - not_null
+          - unique
+      - name: employee_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_employees')
+                field: employee_id
+
+  - name: fct_sales
+    description: "Table de faits au grain ligne de ticket."
+    columns:
+      - name: sales_line_id
+        tests:
+          - not_null
+          - unique
+      - name: sales_id
+        tests:
+          - not_null
+      - name: cashier_employee_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_employees')
+                field: employee_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+      - name: promotion_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_promotions')
+                field: promotion_id
+      - name: sold_date
+        tests:
+          - not_null
+      - name: payment_type
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['cash', 'credit_card', 'debit_card']

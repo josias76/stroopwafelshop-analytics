@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: mart_sales_detail
+    description: "Mart détaillée dénormalisée au grain ligne de vente, prête pour le dashboard."
+    columns:
+      - name: sales_line_id
+        tests:
+          - not_null
+          - unique
+      - name: sales_id
+        tests:
+          - not_null
+      - name: sold_date
+        tests:
+          - not_null
+      - name: employee_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_employees')
+                field: employee_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+
+  - name: mart_sales_transactions
+    description: "Mart transactionnelle au grain ticket de caisse pour les KPIs de transactions."
+    columns:
+      - name: transaction_key
+        tests:
+          - not_null
+          - unique
+      - name: sold_date
+        tests:
+          - not_null
+      - name: employee_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_employees')
+                field: employee_id
+
+  - name: mart_sales_performance
+    description: "Mart agrégée métier pour alimenter directement les graphiques du dashboard."
+    columns:
+      - name: sales_performance_key
+        tests:
+          - not_null
+          - unique
+      - name: sold_date
+        tests:
+          - not_null
+      - name: employee_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_employees')
+                field: employee_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
